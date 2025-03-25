@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-exchange-alt"></i> Transfer Funds
+    </div>
+    
+    {% if messages %}
+    <div style="margin-bottom: 20px;">
+        {% for message in messages %}
+        <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %}" 
+               style="margin-right: 8px;"></i> {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="POST" style="max-width: 500px; margin: 0 auto;">
+        {% csrf_token %}
+        <div style="margin-bottom: 20px;">
+            <label for="recipient" style="display: block; margin-bottom: 8px; font-weight: 600;">Recipient Account Number</label>
+            <input type="text" id="recipient" name="recipient" 
+                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;"
+                   required>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="amount" style="display: block; margin-bottom: 8px; font-weight: 600;">Amount to Transfer</label>
+            <div style="position: relative;">
+                <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-weight: 600;">$</span>
+                <input type="number" id="amount" name="amount" 
+                       style="width: 100%; padding: 12px 12px 12px 30px; border: 2px solid #ddd; border-radius: 8px;"
+                       min="1" step="0.01" required>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="description" style="display: block; margin-bottom: 8px; font-weight: 600;">Description (Optional)</label>
+            <input type="text" id="description" name="description" 
+                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;">
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #FFA500, #FF8C00);">
+            <i class="fas fa-paper-plane"></i> Transfer Funds
+        </button>
+    </form>
+</div>
+{% endblock %}

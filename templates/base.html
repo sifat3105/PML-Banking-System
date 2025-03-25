@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PML Bank PLC - {% block title %}{% endblock %}</title>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #1e3c72;
+            --secondary-color: #2a5298;
+            --success-color: #4CAF50;
+            --danger-color: #ff4b2b;
+            --warning-color: #FFA500;
+            --text-color: #333;
+            --light-gray: #f5f7fa;
+            --medium-gray: #ddd;
+            --dark-gray: #555;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        .bank-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .bank-header h1 {
+            font-size: 28px;
+        }
+        
+        .bank-header i {
+            margin-right: 10px;
+        }
+        
+        /* Navigation */
+        .main-nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            position: relative;
+        }
+        
+        .nav-links a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .nav-links a.active {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-menu img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        /* Button Styles */
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(30, 60, 114, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #45a049));
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #ff416c));
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #FF8C00));
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #555, #333));
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+            outline: none;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        /* Message Styles */
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            background-color: #ffecec;
+            border-left-color: var(--danger-color);
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        .success-message {
+            color: var(--success-color);
+            background-color: #edf7ee;
+            border-left-color: var(--success-color);
+        }
+        
+        .warning-message {
+            color: var(--warning-color);
+            background-color: #fff8e6;
+            border-left-color: var(--warning-color);
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links li {
+            margin: 0 15px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 5px 0;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+        /* Previous styles remain the same... */
+
+        /* User Dropdown Styles */
+        .user-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            animation: fadeInDown 0.3s ease;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .user-dropdown a:hover {
+            background-color: var(--light-gray);
+            color: var(--secondary-color);
+        }
+        
+        .user-dropdown a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .logout-btn {
+            color: var(--danger-color) !important;
+            border-top: 1px solid var(--medium-gray);
+        }
+        
+        .logout-btn:hover {
+            background-color: #ffecec !important;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="bank-header">
+        <h1><i class="fas fa-university"></i> PML Bank PLC</h1>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{% url 'account_details' %}" class="{% if 'account' in request.path %}active{% endif %}"><i class="fas fa-user"></i> Account</a></li>
+                <li><a href="{% url 'deposit' %}" class="{% if 'deposit' in request.path %}active{% endif %}"><i class="fas fa-money-bill-wave"></i> Deposit</a></li>
+                <li><a href="{% url 'withdraw' %}" class="{% if 'withdraw' in request.path %}active{% endif %}"><i class="fas fa-hand-holding-usd"></i> Withdraw</a></li>
+                <li><a href="{% url 'transfer' %}" class="{% if 'transfer' in request.path %}active{% endif %}"><i class="fas fa-exchange-alt"></i> Transfer</a></li>
+                <li><a href="{% url 'transactions' %}" class="{% if 'transactions' in request.path %}active{% endif %}"><i class="fas fa-history"></i> Transactions</a></li>
+            </ul>
+            
+            <div class="user-menu" id="userMenu">
+                <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=1e3c72&color=fff" 
+                     alt="User Avatar" class="user-avatar">
+                <span>{{ user.first_name }} {{ user.last_name }}</span>
+                
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="{% url 'account_details' %}">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                    <a href="{% url 'change_password' %}">
+                        <i class="fas fa-key"></i> Change Password
+                    </a>
+                    <a href="{% url 'transactions' %}">
+                        <i class="fas fa-history"></i> Transaction History
+                    </a>
+                    <a href="{% url 'logout' %}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="container">
+        {% if messages %}
+        <div style="margin-bottom: 20px;">
+            {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}-message{% endif %}">
+                <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% elif message.tags == 'success' %}check-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}" 
+                   style="margin-right: 8px;"></i> 
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-info-circle"></i> About Us</a></li>
+            <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="#"><i class="fas fa-shield-alt"></i> Security</a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+            <li><a href="#"><i class="fas fa-file-alt"></i> Terms</a></li>
+        </ul>
+        <p>&copy; {% now "Y" %} PML Bank PLC. All rights reserved.</p>
+    </footer>
+    
+    <!-- Scripts -->
+    <script>
+        // Auto-focus first form input
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInput = document.querySelector('form input[type="text"], form input[type="email"], form input[type="password"], form input[type="number"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+            
+            // Add active class to current page in navigation
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+            
+        });
+        // Auto-focus first form input
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInput = document.querySelector('form input[type="text"], form input[type="email"], form input[type="password"], form input[type="number"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+            
+            // Add active class to current page in navigation
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+
+            // User dropdown functionality
+            const userMenu = document.getElementById('userMenu');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            userMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('show');
+            });
+
+            // Prevent dropdown from closing when clicking inside it
+            userDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        // Confirm logout
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    if (!confirm('Are you sure you want to logout?')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

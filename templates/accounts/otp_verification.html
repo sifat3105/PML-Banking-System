@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PML Bank PLC - OTP Verification</title>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <style>
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+        .bank-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .form-container {
+            background: linear-gradient(135deg, #f9f9f9, #ffffff);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            animation: fadeInDown 1s ease;
+        }
+        .form-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .otp-instructions {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .otp-input-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .otp-input:focus {
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+            outline: none;
+        }
+        .btn {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(30, 60, 114, 0.3);
+        }
+        .btn-resend {
+            background: transparent;
+            color: #2a5298;
+            border: 1px solid #2a5298;
+            margin-top: 15px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-resend:hover {
+            background: rgba(42, 82, 152, 0.1);
+        }
+        .btn-resend.disabled {
+            color: #999;
+            border-color: #999;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .timer {
+            text-align: center;
+            margin-top: 15px;
+            color: #555;
+            font-weight: 600;
+        }
+        .error-message {
+            color: #ff4b2b;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ffecec;
+            border-radius: 6px;
+            border-left: 4px solid #ff4b2b;
+            text-align: center;
+            animation: pulse 0.5s ease-in-out;
+        }
+        .success-message {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #edf7ee;
+            border-radius: 6px;
+            border-left: 4px solid #4CAF50;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="bank-header">
+        <h1><i class="fas fa-university"></i> PML Bank PLC</h1>
+    </div>
+
+    <div class="form-container">
+        <div class="form-title">
+            <i class="fas fa-mobile-alt" style="margin-right: 10px;"></i> OTP Verification
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success-message">
+            <i class="fas fa-check-circle" style="margin-right: 8px;"></i> {{ success }}
+        </div>
+        {% endif %}
+
+        <div class="otp-instructions">
+            <p>We've sent a 5-digit verification code to your registered Email address with <strong>{{email}}</strong></p>
+            <p>Please enter it below to verify your identity.</p>
+        </div>
+
+        <form method="POST" action="{% url 'verify_otp' %}">
+            {% csrf_token %}
+            <div class="otp-input-container">
+                <input type="text" class="otp-input" name="otp1" maxlength="1" pattern="[0-9]" required autofocus inputmode="numeric">
+                <input type="text" class="otp-input" name="otp2" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+                <input type="text" class="otp-input" name="otp3" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+                <input type="text" class="otp-input" name="otp4" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+                <input type="text" class="otp-input" name="otp5" maxlength="1" pattern="[0-9]" required inputmode="numeric">
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Verify OTP
+            </button>
+        </form>
+
+        <div class="timer">You can request a new OTP in <span id="countdown">60</span> seconds</div>
+        <a href="{% url 'resend_otp' %}" class="btn-resend disabled" id="resendBtn">
+            <i class="fas fa-redo" style="margin-right: 8px;"></i> Resend OTP
+        </a>
+    </div>
+
+    <script>
+        // Auto-focus and auto-tab between OTP inputs with number validation
+        const otpInputs = document.querySelectorAll('.otp-input');
+        
+        otpInputs.forEach((input, index) => {
+            // Only allow numeric input
+            input.addEventListener('input', (e) => {
+                // Remove any non-numeric characters
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                
+                if (e.target.value.length === 1) {
+                    if (index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                }
+            });
+            
+            // Handle backspace and arrow keys
+            input.addEventListener('keydown', (e) => {
+                // Allow backspace, delete, tab and arrow keys
+                if (e.key === 'Backspace' && e.target.value.length === 0) {
+                    if (index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                }
+                
+                // Prevent non-numeric input
+                if (e.key.length === 1 && !/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Handle paste event
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasteData = e.clipboardData.getData('text/plain');
+                const numbers = pasteData.replace(/[^0-9]/g, '');
+                
+                if (numbers.length >= otpInputs.length) {
+                    // If pasted data has enough numbers, fill all fields
+                    for (let i = 0; i < otpInputs.length; i++) {
+                        otpInputs[i].value = numbers[i] || '';
+                    }
+                    otpInputs[otpInputs.length - 1].focus();
+                } else {
+                    // Otherwise fill current and next fields
+                    let currentIndex = index;
+                    for (let i = 0; i < numbers.length && currentIndex < otpInputs.length; i++) {
+                        otpInputs[currentIndex].value = numbers[i];
+                        currentIndex++;
+                    }
+                    if (currentIndex < otpInputs.length) {
+                        otpInputs[currentIndex].focus();
+                    } else {
+                        otpInputs[otpInputs.length - 1].focus();
+                    }
+                }
+            });
+        });
+
+        // Simple countdown timer for resend OTP
+        let timeLeft = 60;
+        const countdownEl = document.getElementById('countdown');
+        const resendBtn = document.getElementById('resendBtn');
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownEl.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                countdownEl.style.display = 'none';
+                resendBtn.classList.remove('disabled');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

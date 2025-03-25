@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <i class="fas fa-user-circle"></i> Account Details
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+            <h3 style="color: #2a5298; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                Personal Information
+            </h3>
+            <div style="margin-top: 15px;">
+                <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Phone:</strong> {{ account.phone_number }}</p>
+                <p><strong>Member Since:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+            </div>
+        </div>
+        
+        <div>
+            <h3 style="color: #2a5298; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                Account Information
+            </h3>
+            <div style="margin-top: 15px;">
+                <p><strong>Account Number:</strong> {{ account.account_number }}</p>
+                <p><strong>Account Status:</strong> 
+                    {% if account.is_active %}
+                        <span style="color: #4CAF50;">Active</span>
+                    {% else %}
+                        <span style="color: #ff4b2b;">Inactive</span>
+                    {% endif %}
+                </p>
+                <p><strong>Balance:</strong> ${{ account.balance }}</p>
+                <p><strong>Account Created:</strong> {{ account.created_at|date:"M d, Y" }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 30px; text-align: center;">
+        {% comment %} {% url 'update_profile' %} {% endcomment %}
+        <a href="" class="btn">
+            <i class="fas fa-user-edit"></i> Update Profile
+        </a>
+        {% comment %} {% url 'change_password' %} {% endcomment %}
+        <a href="" class="btn" style="background: linear-gradient(135deg, #FFA500, #FF8C00);">
+            <i class="fas fa-key"></i> Change Password
+        </a>
+    </div>
+</div>
+{% endblock %}
